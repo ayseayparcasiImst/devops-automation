@@ -1,3 +1,10 @@
+stage('Email Notification'){
+    mail bcc: '', body: '''Build successful!!!!
+    Thanks,
+    Ayse''', cc: '', from: '', replyTo: '', subject: 'Build successfull', to: 'aysayparcasi@gmail.com'
+    echo 'e-mail OK!'
+}
+
 pipeline {
     agent any
     tools{
@@ -13,27 +20,11 @@ pipeline {
         stage('Build docker image'){
             steps{
                 script{
-                    sh 'docker build -t imst/devops-integration .'
+                    sh 'docker build -t ayse/devops-integration .'
                 }
             }
         }
-        stage('Push image to Hub'){
-            steps{
-                script{
-                   withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
-                   sh 'docker login -u javatechie -p ${dockerhubpwd}'
 
-}
-                   sh 'docker push javatechie/devops-integration'
-                }
-            }
-        }
-        stage('Deploy to k8s'){
-            steps{
-                script{
-                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'k8sconfigpwd')
-                }
-            }
-        }
+
     }
 }
